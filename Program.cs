@@ -40,6 +40,21 @@
 public static class Program {
     public static void Main(string[] args) {
         var students = Student.FromCSVFile(new("diakok.csv"));
+
+        var ex0 = students.GroupBy(x => x.Class).Select(x => (x.Key, x.Average(x => x.Average))).OrderByDescending(x => x.Item2);
+        Console.WriteLine(string.Join('\n', ex0));
+
+        var ex1 = students.GroupBy(x => x.Class).Select(x => (x.Key, x.MaxBy(x => x.Average).Name));
+        Console.WriteLine(string.Join('\n', ex1));
+
+        var ex2 = students.AggregateBy(x => x.Age, _ => 0, (acc, _) => acc + 1);
+        Console.WriteLine(string.Join('\n', ex2));
+
+        var ex3 = students.GroupBy(x => x.Class).Select(x => (x.Key, x.MaxBy(x => x.Average).Average, x.Where(y => y.Average == x.MaxBy(x => x.Average).Average).Select(x => x.Name)));
+        Console.WriteLine(string.Join('\n', ex3));
+
+        var ex4 = students.Where(x => x.Average < 2f);
+        Console.WriteLine(string.Join('\n', ex4));
     }
 
 }
